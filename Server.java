@@ -40,28 +40,31 @@ class Server
             Runnable r1 =()-> 
             {
                 System.out.println("reader started");
-
+                
              while(true)
              {
                 try
                 {
+
                    String msg = br.readLine();
 
                    if(msg.equals("exit"));
                    {
                       System.out.println("client terminated the chat");
-                      break;
+                      //break;
+                       socket.close();
                    }
 
-                  //  System.out.println("Client: " +msg);
-                }
-                catch(Exception e)
-                {
-                    e.printStackTrace();
-                }
+                   System.out.println("Client: " +msg);
              }
 
+             catch(Exception e)
+             {
+                 e.printStackTrace();
+             }
+         }            
             };
+
             new Thread(r1).start();
 
         }
@@ -71,22 +74,33 @@ class Server
             Runnable r2 =()-> 
             {
                 System.out.println("writer started..");
-                while(true)
+
+                while(true && !socket.isClosed())
                 {
-                    try 
-                    {
+                    try
+                    {  
+                   
                        BufferedReader br1 = new BufferedReader(new InputStreamReader(System.in));
 
                        String content = br1.readLine();
+
                         out.println(content);
                         out.flush();
-                    } 
-                    catch (Exception e)
-                    {
-                      e.printStackTrace();
-                    }
 
+                       /* if(content.equals("exit"));
+                        {
+                           
+                           socket.close();
+                           //break;
+                        }
+                       */
                 }
+
+                catch(Exception e)
+            {
+                e.printStackTrace();
+            }
+            }
 
             };
 
